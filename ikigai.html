@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ikigai — Student Marketplace</title>
+  <style>
+    /* Palette: blue, yellow, grey */
+    :root{
+      --blue:#1e5fff;
+      --yellow:#ffd24c;
+      --grey:#6b7280;
+      --bg:#f7f8fb;
+      --card:#ffffff;
+      --radius:12px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: #111827;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);}
+    header{background:linear-gradient(90deg,var(--blue) 0%, #3a6bff 100%);color:white;padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:14px;align-items:center}
+    /* IKIGAI logo: simple humanized mark */
+    .logo{display:flex;flex-direction:column;gap:2px}
+    .logo svg{width:72px;height:48px}
+    .logo h1{margin:0;font-size:18px;letter-spacing:0.5px}
+    nav{display:flex;align-items:center;gap:12px}
+    .nav-item{position:relative}
+    .nav-link{background:rgba(255,255,255,0.08);padding:8px 12px;border-radius:10px;color:white;text-decoration:none;font-weight:600}
+    .dropdown{position:absolute;top:46px;left:0;background:var(--card);border-radius:10px;box-shadow:0 8px 20px rgba(10,20,40,0.12);padding:8px;display:none;min-width:160px}
+    .nav-item:hover .dropdown{display:block}
+    .dropdown a{display:block;padding:8px;border-radius:8px;color:var(--grey);text-decoration:none}
+    .search-wrap{display:flex;gap:8px;align-items:center}
+    .search{padding:8px 12px;border-radius:999px;border:2px solid rgba(255,255,255,0.12);background:transparent;color:white;min-width:220px}
+    .button{background:var(--yellow);border:none;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+
+    main{padding:28px;max-width:1100px;margin:0 auto}
+    .hero{display:flex;gap:28px;align-items:center}
+    .hero-card{background:var(--card);padding:20px;border-radius:var(--radius);box-shadow:0 6px 20px rgba(8,20,40,0.06);flex:1}
+    .hero h2{margin:4px 0 8px}
+    .hero p{color:var(--grey);margin:0 0 12px}
+    .badges{display:flex;gap:8px}
+    .badge{background:linear-gradient(90deg,var(--yellow),#ffe77f);padding:6px 10px;border-radius:999px;font-weight:700}
+
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:22px}
+    .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(12,20,40,0.06);display:flex;flex-direction:column;gap:10px}
+    .media{height:140px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#f3f6ff, #eef4ff)}
+    .price{font-weight:800;color:var(--blue)}
+    .meta{display:flex;justify-content:space-between;align-items:center;color:var(--grey);font-size:13px}
+    .stars{color:var(--yellow);font-weight:700}
+    .add{background:var(--blue);color:white;border:none;padding:8px;border-radius:8px;cursor:pointer}
+
+    aside{position:sticky;top:20px}
+    .cart{background:var(--card);padding:12px;border-radius:12px}
+    .cart h3{margin:0 0 8px}
+    .cart-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto;padding-right:4px}
+    .cart-row{display:flex;gap:8px;align-items:center}
+    .qty{width:36px;padding:6px;border-radius:8px;border:1px solid #e6e9ef;text-align:center}
+    .small{font-size:13px;color:var(--grey)}
+    .total{display:flex;justify-content:space-between;align-items:center;padding-top:8px;font-weight:800}
+
+    .actions{display:flex;gap:8px;margin-top:10px}
+    .checkout{background:var(--blue);color:white;padding:8px;border-radius:10px;border:none;flex:1}
+    .clear{background:#efefef;border:none;padding:8px;border-radius:10px;color:var(--grey)}
+
+    footer{margin-top:28px;padding:20px;color:var(--grey);display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .credit{font-weight:700;color:var(--grey)}
+
+    .info-block{margin-top:18px;background:var(--card);padding:14px;border-radius:12px}
+    .feedback{display:flex;flex-direction:column;gap:8px}
+    input[type=text],input[type=email],textarea,select{padding:8px;border-radius:8px;border:1px solid #e6e9ef;width:100%}
+
+
+    @media(max-width:900px){
+  .layout{grid-template-columns:1fr;}
+  /* nav{display:none} */  /* comment this out or remove */
+  .search{min-width:140px}
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="false">
+        <!-- handcrafted IKIGAI logo (SVG) -->
+        <svg viewBox="0 0 140 60" role="img" aria-label="Ikigai logo">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0" stop-color="#1e5fff" />
+              <stop offset="1" stop-color="#3a6bff" />
+            </linearGradient>
+          </defs>
+          <rect width="140" height="60" rx="10" fill="white" opacity="0.02"></rect>
+          <g transform="translate(12,6)">
+            <circle cx="18" cy="18" r="18" fill="url(#g1)" />
+            <circle cx="38" cy="18" r="12" fill="#ffd24c" />
+            <path d="M5 45c9-8 32-8 48 0" stroke="#6b7280" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <text x="66" y="26" font-family="Inter" font-size="18" font-weight="700" fill="#ffffff">IKIGAI</text>
+            <text x="66" y="42" font-family="Inter" font-size="10" fill="#ffffff" opacity="0.9">Student Marketplace</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <nav aria-label="Main navigation">
+      <div class="nav-item">
+        <a class="nav-link" href="#">Shop</a>
+        <div class="dropdown" role="menu">
+          <a href="#" data-cat="all">All categories</a>
+          <a href="#" data-cat="books">Books</a>
+          <a href="#" data-cat="electronics">Electronics</a>
+          <a href="#" data-cat="stationery">Stationery</a>
+          <a href="#" data-cat="Sneakers and Fashion">Sneakers and Fashion</a>
+        </div>
+      </div>
+      <div class="nav-item"><a class="nav-link" href="#hours">Hours</a></div>
+      <div class="nav-item"><a class="nav-link" href="#feedback">Feedback</a></div>
+    </nav>
+
+    <div class="search-wrap">
+      <input id="search" class="search" placeholder="Search products, e.g. textbook" />
+      <button id="view-cart" class="button">View Cart</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <h2>Thoughtfully selected. Truly student-friendly.</h2>
+        <p>Ikigai is a small local marketplace built for students: genuine products, clear prices in Rands, and pieces carefully chosen with campus life in mind. We keep costs low and service friendly — so you can focus on study and life.</p>
+        <div class="badges" role="list">
+          <div class="badge">Authentic</div>
+          <div class="badge">Price-friendly</div>
+          <div class="badge">Student-first</div>
+        </div>
+      </div>
+      <div style="width:320px">
+        <div class="info-block">
+          <h3 style="margin:0 0 8px">Working hours</h3>
+          <p class="small" id="hours">Monday — Friday · 9:00 — 17:00</p>
+          <h4 style="margin-top:10px;margin-bottom:6px">Contact</h4>
+          <p class="small">Email at: <strong>orders@ikigai.com</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:12px 0">Products</h3>
+        </div>
+
+        <div class="products" id="product-list" aria-live="polite"></div>
+      </section>
+
+      <aside>
+        <div class="cart" aria-live="polite">
+          <h3>Cart</h3>
+          <div class="cart-list" id="cart-list"></div>
+          <div class="total"><span>Total</span><span id="cart-total">R0.00</span></div>
+          <div class="actions">
+            <button id="clear-cart" class="clear">Clear</button>
+            <button id="checkout" class="checkout">Checkout</button>
+          </div>
+        </div>
+
+        <div class="info-block" style="margin-top:12px">
+          <h4 style="margin:0 0 8px">Leave feedback</h4>
+          <form id="feedback" class="feedback">
+            <input type="text" id="fb-name" placeholder="Your name (optional)" />
+            <input type="email" id="fb-email" placeholder="Email (optional)" />
+            <select id="fb-rating">
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Good</option>
+              <option value="3">3 - OK</option>
+              <option value="2">2 - Poor</option>
+              <option value="1">1 - Very poor</option>
+            </select>
+            <textarea id="fb-text" rows="3" placeholder="Tell us about your experience"></textarea>
+            <button type="button" id="submit-feedback" class="button">Send feedback</button>
+            <p id="fb-msg" class="small" style="margin:6px 0 0"></p>
+          </form>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="small">&copy; Ikigai — Student Marketplace</div>
+      <div class="credit">Built by KwakhaNya Labs</div>
+    </footer>
+  </main>
+
+  <script>
+
+  // Toggle dropdowns on click for mobile
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      const dropdown = item.querySelector('.dropdown');
+      if(dropdown){
+        dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+      }
+    });
+  });
+
+    // Helper SVG generators must be declared before PRODUCTS so calls are safe in all browsers/editors.
+    function svgBook(color){
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='140' viewBox='0 0 220 140'><rect rx='10' width='220' height='140' fill='%23f5f8ff'/><g transform='translate(18,22)'><rect width='70' height='96' rx='6' fill='${color}' opacity='0.95'/><rect x='82' width='110' height='96' rx='6' fill='%23ffd24c' opacity='0.95'/><text x='87' y='40' font-family='Inter' font-size='12' fill='%23011111'>Textbook</text></g></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    function svgGadget(color){
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='140' viewBox='0 0 220 140'><rect rx='10' width='220' height='140' fill='%23f5f8ff'/><g transform='translate(28,18)'><rect x='0' y='0' width='100' height='70' rx='8' fill='${color}'/><circle cx='160' cy='32' r='28' fill='%23ffd24c'/><text x='6' y='94' font-family='Inter' font-size='12' fill='%236b7280'>Portable charger</text></g></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    function svgNotebook(color){
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='140' viewBox='0 0 220 140'><rect rx='10' width='220' height='140' fill='%23f5f8ff'/><g transform='translate(20,24)'><rect width='140' height='86' rx='6' fill='%23ffffff' stroke='${color}' stroke-width='6'/><line x1='12' y1='24' x2='128' y2='24' stroke='%23e6e9ef'/><text x='12' y='64' font-family='Inter' font-size='12' fill='%236b7280'>Lecture notes</text></g></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    function svgEarbuds(color){
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='140' viewBox='0 0 220 140'><rect rx='10' width='220' height='140' fill='%23f5f8ff'/><g transform='translate(28,16)'><circle cx='60' cy='40' r='20' fill='${color}'/><circle cx='120' cy='40' r='20' fill='%23ffd24c'/><text x='12' y='110' font-family='Inter' font-size='12' fill='%236b7280'>Wireless earbuds</text></g></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    function svgCalculator(color){
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='140' viewBox='0 0 220 140'><rect rx='10' width='220' height='140' fill='%23f5f8ff'/><g transform='translate(36,22)'><rect width='84' height='96' rx='8' fill='${color}'/><rect x='10' y='10' width='64' height='26' rx='4' fill='%23ffffff'/><text x='12' y='48' font-family='Inter' font-size='11' fill='%23ffffff'>Calc</text></g></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    function svgSneakers(color){
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='140' viewBox='0 0 220 140'><rect rx='10' width='220' height='140' fill='%23f5f8ff'/><g transform='translate(36,22)'><rect width='84' height='96' rx='8' fill='${color}'/><rect x='10' y='10' width='64' height='26' rx='4' fill='%23ffffff'/><text x='12' y='48' font-family='Inter' font-size='11' fill='%23ffffff'>Calc</text></g></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    // Sample product data (human-curated tone, realistic descriptions)
+   const PRODUCTS = [
+  {id:1, title:'Back Pack: Cash Crusaders', price:300.00, category:'books', stock:12, rating:4.5, img:'images/BAGS/p1.jpg'},
+  {id:2, title:'keyBoard: Cash Crusaders', price:130.00, category:'electronics', stock:6, rating:4.0, img:'images/KEY BOARDS/DIXON KEY BOARDS/p2.webp'},
+  {id:3, title:'DIXON KEYBOARDS:Cash Crusaders', price:400.00, category:'electronics', stock:48, rating:4.7, img:'images/KEY BOARDS/DIXON KEY BOARDS/p3.webp'},
+  {id:4, title:'Wireless mouse: Cash Crusaders', price:100.00, category:'electronics', stock:0, rating:3.8, img:'images/KEY BOARDS/MOUSES/wireless.webp'},
+  {id:5, title:'Mouse: Cash Crusaders', price:80.00, category:'electronics', stock:3, rating:4.2, img:'images/KEY BOARDS/MOUSES/mouse.webp'},
+  
+  {id:6, title:'Sneaker Combo', price:2000.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/COMBO R 2000.jpg'},
+  {id:7, title:'Sneaker S1001', price:1200.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1200 (2).jpg'},
+  {id:8, title:'Sneaker S1002', price:1200.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1200 (3).jpg'},
+  {id:9, title:'Sneaker S1003', price:1200.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1200 (4).jpg'},
+  {id:10, title:'Sneaker S1004', price:1200.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1200 (5).jpg'},
+  {id:11, title:'Sneaker S1005', price:1200.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1200 (6).jpg'},
+  {id:12, title:'Sneaker S1006', price:1200.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1200 (7).jpg'},
+  {id:13, title:'Sneaker S1007', price:1200.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1200.jpg'},
+  {id:14, title:'Sneaker S1008', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (2).jpg'},
+  {id:15, title:'Sneaker S1009', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (3).jpg'},
+  {id:16, title:'Sneaker S2001', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (4).jpg'},
+  {id:17, title:'Sneaker S1010', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (5).jpg'},
+  {id:18, title:'Sneaker S1011', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (6).jpg'},
+  {id:19, title:'Sneaker S1012', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (7).jpg'},
+  {id:20, title:'Sneaker S1013', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (8).jpg'},
+  {id:21, title:'Sneaker S1014', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (9).jpg'},
+  {id:22, title:'Sneaker S1015', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300 (10).jpg'},
+  {id:23, title:'Sneaker S1016', price:1300.00, category:'Sneakers and Fashion', stock:3, rating:4.2, img:'images/SHOES/R 1300.jpg'}
+];
+    // Cart state
+    let cart = JSON.parse(localStorage.getItem('ikigai_cart')||'[]');
+
+    // Render products
+    const productList = document.getElementById('product-list');
+    function renderProducts(filter=''){
+      productList.innerHTML='';
+      const q = String(filter||'').trim().toLowerCase();
+      // show either by search match or by category exact match
+      const shown = PRODUCTS.filter(p=>{
+        if(!q) return true;
+        if(['books','electronics','stationery','all'].includes(q)) return q==='all' || p.category.toLowerCase()===q;
+        return p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+      });
+      if(shown.length===0){ productList.innerHTML = '<div class="small">No products match your search</div>'; return; }
+      for(const p of shown){
+        const el = document.createElement('article'); el.className='card';
+        el.innerHTML = `
+          <div class="media"><img src="${p.img}" alt="${p.title}" style="max-width:100%;max-height:100%;border-radius:8px"/></div>
+          <div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><strong>${p.title}</strong><div class="price">R${p.price.toFixed(2)}</div></div>
+          <div class="meta"><div class="small">${p.stock>0? p.stock+' in stock':'Out of stock'}</div><div class="stars">${renderStars(p.rating)}</div></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="add" data-id="${p.id}" ${p.stock===0? 'disabled':''}>Add</button>
+          </div>
+        `;
+        productList.appendChild(el);
+      }
+    }
+
+    function renderStars(r){
+      const full = Math.floor(r);
+      const hasHalf = (r - full) >= 0.5;
+      let s = '';
+      for(let i=0;i<full;i++) s += '★';
+      if(hasHalf) s += '☆';
+      return s + ` <span class="small">(${r.toFixed(1)})</span>`;
+    }
+
+    // Cart rendering
+    function saveCart(){ try{ localStorage.setItem('ikigai_cart', JSON.stringify(cart)); }catch(e){ console.warn('Could not save cart', e); } }
+    function renderCart(){
+      const list = document.getElementById('cart-list'); list.innerHTML='';
+      if(!cart || cart.length===0){ list.innerHTML='<div class="small">Your cart is empty</div>'; document.getElementById('cart-total').textContent='R0.00'; return; }
+      let total=0;
+      cart.forEach(item=>{
+        const p = PRODUCTS.find(x=>x.id===item.id);
+        if(!p) return;
+        total += p.price * item.qty;
+        const row = document.createElement('div'); row.className='cart-row';
+        row.innerHTML = `
+          <div style="flex:1"><div style="font-weight:700">${p.title}</div><div class="small">R${p.price.toFixed(2)} · ${p.stock>0? 'Available':'Out'}</div></div>
+          <div style="display:flex;align-items:center;gap:8px"><input class="qty" data-id="${p.id}" value="${item.qty}" type="number" min="1" max="99"/><button class="remove" data-id="${p.id}" style="background:transparent;border:none;color:var(--grey);cursor:pointer">Remove</button></div>
+        `;
+        list.appendChild(row);
+      });
+      document.getElementById('cart-total').textContent = 'R' + total.toFixed(2);
+    }
+
+    // Actions (delegated)
+    document.addEventListener('click', e=>{
+      if(e.target.matches('.add')){
+        const id = Number(e.target.dataset.id);
+        const p = PRODUCTS.find(x=>x.id===id);
+        if(!p || p.stock===0){ alert('This item is not available.'); return; }
+        const existing = cart.find(c=>c.id===id);
+        if(existing) existing.qty +=1; else cart.push({id:id,qty:1});
+        saveCart(); renderCart();
+      }
+      if(e.target.matches('.remove')){
+        const id = Number(e.target.dataset.id);
+        cart = cart.filter(c=>c.id!==id); saveCart(); renderCart();
+      }
+    });
+
+    // quantity change using event delegation
+    document.getElementById('cart-list').addEventListener('change', e=>{
+      if(e.target && e.target.matches('.qty')){
+        const id = Number(e.target.dataset.id); const v = Number(e.target.value)||1;
+        const it = cart.find(c=>c.id===id); if(it) it.qty = Math.max(1, v); saveCart(); renderCart();
+      }
+    });
+
+    document.getElementById('clear-cart').addEventListener('click', ()=>{ if(confirm('Clear the cart?')){ cart=[]; saveCart(); renderCart(); }});
+
+    document.getElementById('search').addEventListener('input', e=> renderProducts(e.target.value));
+
+    // Checkout: collect email, create invoice window, provide download + open mailto prefilled with summary
+    document.getElementById('checkout').addEventListener('click', ()=>{
+      if(!cart || cart.length===0){ alert('Your cart is empty. Add some items before checkout.'); return; }
+      const email = prompt('Enter your email address for the invoice (we will prepare it locally):');
+      if(!email) return;
+      // Build invoice HTML
+      const lines = [];
+      let total=0;
+      lines.push('<h2>Ikigai — Invoice</h2>');
+      lines.push('<p>Thank you for your purchase. This is a simple invoice you can save or print.</p>');
+      lines.push('<table style="width:100%;border-collapse:collapse">');
+      lines.push('<tr><th style="text-align:left">Item</th><th>Qty</th><th>Unit</th><th style="text-align:right">Line</th></tr>');
+      cart.forEach(c=>{
+        const p = PRODUCTS.find(x=>x.id===c.id);
+        if(!p) return;
+        const line = p.price * c.qty; total+=line;
+        lines.push(`<tr><td>${p.title}</td><td style="text-align:center">${c.qty}</td><td>R${p.price.toFixed(2)}</td><td style="text-align:right">R${line.toFixed(2)}</td></tr>`);
+      });
+      lines.push(`<tr><td colspan="3" style="text-align:right;font-weight:800">Total</td><td style="text-align:right;font-weight:800">R${total.toFixed(2)}</td></tr>`);
+      lines.push('</table>');
+      lines.push(`<p style="font-size:12px;color:#6b7280">Working hours: Monday—Friday 9:00—17:00</p>`);
+      const invoiceHTML = `<!doctype html><html><head><meta charset="utf-8"><title>Invoice</title></head><body style="font-family:Inter,Arial;margin:20px;">${lines.join('')}<p style="margin-top:20px">Invoice prepared for: <strong>${email}</strong></p></body></html>`;
+      const blob = new Blob([invoiceHTML],{type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      // Open invoice in new window so user can save as PDF or print
+      window.open(url, '_blank');
+      // Also offer to open user's mail client with brief summary and link to the invoice (they must attach if needed)
+      const subject = encodeURIComponent('Your Ikigai invoice');
+      const body = encodeURIComponent(`Dear customer,%0D%0A%0D%0AThank you for your purchase. The invoice totals R${total.toFixed(2)}.%0D%0AYou can view or print the invoice from the window we just opened. If you would like a PDF attached, please save the invoice and attach it to this message.%0D%0A%0D%0ARegards,%0D%0AIkigai`);
+      window.location.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`;
+      // Clear cart after checkout
+      cart=[]; saveCart(); renderCart();
+    });
+
+    // Feedback
+    document.getElementById('submit-feedback').addEventListener('click', ()=>{
+      const name = document.getElementById('fb-name').value.trim();
+      const email = document.getElementById('fb-email').value.trim();
+      const rating = document.getElementById('fb-rating').value;
+      const text = document.getElementById('fb-text').value.trim();
+      // For privacy and demo reasons we store feedback locally only and show a confirmation message
+      const fb = {name,email,rating,text,date:new Date().toISOString()};
+      const arr = JSON.parse(localStorage.getItem('ikigai_feedback')||'[]'); arr.push(fb); localStorage.setItem('ikigai_feedback', JSON.stringify(arr));
+      document.getElementById('fb-msg').textContent = 'Thanks — your feedback is recorded.';
+      setTimeout(()=>{ document.getElementById('fb-msg').textContent = ''; }, 3500);
+      document.getElementById('fb-name').value='';document.getElementById('fb-email').value='';document.getElementById('fb-text').value='';
+    });
+
+    // Small UX: category dropdown links filter products
+    document.querySelectorAll('.dropdown a').forEach(a=>a.addEventListener('click', e=>{ e.preventDefault(); const c = String(e.currentTarget.dataset.cat||'').toLowerCase(); if(c==='all') renderProducts(''); else renderProducts(c); }));
+
+    // View cart button (scroll to cart area)
+    document.getElementById('view-cart').addEventListener('click', ()=>{ document.querySelector('.cart').scrollIntoView({behavior:'smooth'}); });
+
+    // Load initial UI
+    try{ renderProducts(''); renderCart(); }catch(err){ console.error('Render error', err); document.getElementById('product-list').innerHTML = '<div class="small">An error occurred while rendering products. Check the console for details.</div>' }
+
+  </script>
+</body>
+</html>
